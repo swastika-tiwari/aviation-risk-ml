@@ -1,51 +1,49 @@
 import pandas as pd
-import numpy as np
 import json
-from sklearn.ensemble import IsolationForest
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
 
-# Load data
-df = pd.read_csv("../data/flights.csv")
+# Load dataset
+df = pd.read_csv("data/flights.csv")
 
-# Clean
-df = df.dropna(subset=['latitude', 'longitude', 'baro_altitude'])
-df = df.sample(n=2000, random_state=42)
+# Convert timestamps
+df["firstseen"] = pd.to_datetime(df["firstseen"], unit="s")
+df["lastseen"] = pd.to_datetime(df["lastseen"], unit="s")
 
-# Distance function
-def haversine(lat1, lon1, lat2, lon2):
-    R = 6371
-    lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
-    dlat = lat2 - lat1
-    dlon = lon2 - lon1
-    a = np.sin(dlat/2)**2 + np.cos(lat1)*np.cos(lat2)*np.sin(dlon/2)**2
-    return 2 * R * np.arcsin(np.sqrt(a))
+# Create flight duration feature
+df["duration_minutes"] = (df["lastseen"] - df["firstseen"]).dt.total_seconds() / 60
 
-# Pairwise analysis
-pairs = []
+# Drop rows with missing airports
+df = df.dropna(subset=["estdepartureairport", "estarrivalairport"])
 
-for i in range(len(df)):
-    for j in range(i+1, len(df)):
-        d = haversine(
-            df.iloc[i]['latitude'], df.iloc[i]['longitude'],
-            df.iloc[j]['latitude'], df.iloc[j]['longitude']
-        )
-        alt_diff = abs(df.iloc[i]['baro_altitude'] - df.iloc[j]['baro_altitude'])
+# Create simple risk label (long flights + unknown aircraft model)
+df["risk"] = ((df["duration_minutes"] > 180) | (df["model"].isna())).astype(int)
 
-        if d < 5 and alt_diff < 1000:
-            pairs.append({
-                "distance": float(d),
-                "alt_diff": float(alt_diff)
-            })
+# Features
+X = df[["duration_minutes"]]
+y = df["risk"]
 
-pairs_df = pd.DataFrame(pairs)
+# Train test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-# ML Model
-model = IsolationForest(contamination=0.05)
-pairs_df['anomaly'] = model.fit_predict(pairs_df)
+# Model
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
 
-# Convert to JSON
-results = pairs_df.to_dict(orient="records")
+# Predictions
+preds = model.predict(X_test)
+acc = accuracy_score(y_test, preds)
 
-with open("../output/results.json", "w") as f:
-    json.dump(results, f, indent=4)
+# Save results
+results = {
+    "model_accuracy": float(acc),
+    "samples_used": int(len(df)),
+    "avg_duration": float(df["duration_minutes"].mean()),
+}
 
-print("Results generated!")
+with open("output/results.json", "w") as f:
+    json.dump(results, f)
+
+print("Model accuracy:", acc)
+print("Results saved!")
