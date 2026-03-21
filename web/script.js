@@ -1,24 +1,7 @@
 fetch("results.json")
-.then(res => res.json())
-.then(data => {
-
-    let risky = data.filter(d => d.anomaly === -1);
-
-    document.getElementById("stats").innerHTML =
-        `Total Events: ${data.length} <br> Risky Events: ${risky.length}`;
-
-    const ctx = document.getElementById('chart');
-
-    new Chart(ctx, {
-        type: 'scatter',
-        data: {
-            datasets: [{
-                label: 'Flight Risk',
-                data: data.map(d => ({
-                    x: d.distance,
-                    y: d.alt_diff
-                }))
-            }]
-        }
-    });
-});
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("accuracy").innerText = data.model_accuracy;
+    document.getElementById("samples").innerText = data.dataset_size;
+    document.getElementById("duration").innerText = data.near_miss_events_detected;
+  });
