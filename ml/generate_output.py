@@ -13,7 +13,7 @@ from sklearn.metrics import accuracy_score
 # ==============================
 
 DATA_PATH = "data/flights.csv"
-OUTPUT_PATH = "../web/results.json"
+OUTPUT_PATH = "web/results.json"
 
 HORIZONTAL_THRESHOLD_KM = 9.26
 VERTICAL_THRESHOLD_FT = 1000
