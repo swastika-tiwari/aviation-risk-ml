@@ -1,1 +1,2 @@
-data/flights.csv
+data/
+*.csv
