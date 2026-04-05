@@ -4,7 +4,7 @@ fetch("results.json")
     console.log("DATA:", data);
 
     const acc = document.getElementById("accuracy");
-    const total = document.getElementById(separation_breach_count["total"]);
+    const total = document.getElementById("total");
     const synthetic = document.getElementById("synthetic");
     const safe = document.getElementById("safe");
     const risks = document.getElementById("risks");
