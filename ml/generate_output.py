@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score
 # CONFIG
 # ==============================
 
-DATA_PATH = "flight.csv"
+DATA_PATH = "data/flight.csv"
 OUTPUT_PATH = "web/results.json"
 
 HORIZONTAL_THRESHOLD_KM = 9.26
@@ -195,6 +195,7 @@ def save_results(acc, detected_pairs, y):
             "safe": int(len(y) - sum(y))
         }
     }
+    print("Writing results to:", OUTPUT_PATH)
 
     with open(OUTPUT_PATH, "w") as f:
         json.dump(results, f, indent=4)
