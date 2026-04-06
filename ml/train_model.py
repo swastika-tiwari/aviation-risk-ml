@@ -2,11 +2,8 @@ import pandas as pd
 import os
 import pickle
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, precision_recall_curve
-from xgboost import XGBClassifier
-import matplotlib.pyplot as plt
-import shap
-
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from features import compute_features
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,41 +15,26 @@ def train_model():
     df = pd.read_csv(DATA_PATH)
 
     X = compute_features(df)
-    y = df["label"].values
+    y = df["is_conflict"]
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.3, stratify=y, random_state=42
+        X, y, test_size=0.3, random_state=42, stratify=y
     )
 
-    model = XGBClassifier(scale_pos_weight=3)
+    model = RandomForestClassifier(n_estimators=200, max_depth=10)
     model.fit(X_train, y_train)
 
     preds = model.predict(X_test)
 
-    print("\n📊 Classification Report:\n")
     print(classification_report(y_test, preds))
+    print(confusion_matrix(y_test, preds))
 
-    # Precision-Recall
-    probs = model.predict_proba(X_test)[:,1]
-    precision, recall, _ = precision_recall_curve(y_test, probs)
+    print("Accuracy:", accuracy_score(y_test, preds))
 
-    plt.plot(recall, precision)
-    plt.xlabel("Recall")
-    plt.ylabel("Precision")
-    plt.title("Precision-Recall Curve")
-    plt.show()
-
-    # SHAP
-    explainer = shap.Explainer(model)
-    shap_values = explainer(X_test[:100])
-
-    shap.plots.bar(shap_values)
-
-    # Save model
     with open(MODEL_PATH, "wb") as f:
         pickle.dump(model, f)
 
-    print("✅ Model saved")
+    print("Model saved")
 
 if __name__ == "__main__":
     train_model()

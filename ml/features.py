@@ -1,38 +1,51 @@
 import numpy as np
-
-EARTH_RADIUS = 6371  # km
+import math
 
 def haversine(lat1, lon1, lat2, lon2):
-    # Convert to radians (VECTORISED)
-    lat1 = np.radians(lat1)
-    lon1 = np.radians(lon1)
-    lat2 = np.radians(lat2)
-    lon2 = np.radians(lon2)
+    R = 6371
+    lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
 
     dlat = lat2 - lat1
     dlon = lon2 - lon1
 
-    a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
-    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
+    a = np.sin(dlat/2)**2 + np.cos(lat1)*np.cos(lat2)*np.sin(dlon/2)**2
+    return 2 * R * np.arctan2(np.sqrt(a), np.sqrt(1-a))
 
-    return EARTH_RADIUS * c
+
+def compute_cpa(row):
+    p1 = np.array([row["lat1"], row["lon1"]])
+    p2 = np.array([row["lat2"], row["lon2"]])
+
+    v1 = np.array([row["vx1"], row["vy1"]])
+    v2 = np.array([row["vx2"], row["vy2"]])
+
+    dp = p2 - p1
+    dv = v2 - v1
+
+    dv_norm = np.dot(dv, dv)
+
+    if dv_norm == 0:
+        return 0, np.linalg.norm(dp)
+
+    t_cpa = -np.dot(dp, dv) / dv_norm
+    t_cpa = max(t_cpa, 0)
+
+    d_cpa = np.linalg.norm(dp + dv * t_cpa)
+
+    return t_cpa, d_cpa
 
 
 def compute_features(df):
+    X = []
 
-    # Horizontal distance
-    Dh = haversine(df["lat1"], df["lon1"], df["lat2"], df["lon2"])
+    for _, row in df.iterrows():
 
-    # Vertical distance
-    Dv = np.abs(df["alt1"] - df["alt2"])
+        Dh = haversine(row["lat1"], row["lon1"], row["lat2"], row["lon2"])
+        Dv = abs(row["alt1"] - row["alt2"])
+        rel_vel = abs(row["velocity1"] - row["velocity2"])
 
-    # Relative velocity
-    rel_vel = np.abs(df["vel1"] - df["vel2"])
+        t_cpa, d_cpa = compute_cpa(row)
 
-    # Time to CPA (avoid divide by zero)
-    tcpa = Dh / (rel_vel + 1e-5)
+        X.append([Dh, Dv, rel_vel, t_cpa, d_cpa])
 
-    # Distance at CPA
-    dcpa = Dh - rel_vel * tcpa
-
-    return np.column_stack([Dh, Dv, rel_vel, tcpa, dcpa])
+    return np.array(X)
