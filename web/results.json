@@ -1,57 +1,35 @@
 {
-    "model_accuracy": 1.0,
-    "detected_risks": [
-        "AAL48   -ALK504  ",
-        "JBU348  -AAL325  ",
-        "AAL48   -AFL151  ",
-        "N405PM  -SKW5490 ",
-        "SKW5593 -ASH6008 ",
-        "JBU348  -AAL135  ",
-        "SKW5593 -JBU206  ",
-        "NKS106  -N405PM  ",
-        "JBU348  -ASH6008 ",
-        "ASH6008 -AAL325  ",
-        "VOZ1281 -QFA790  ",
-        "ALK504  -UAL517  ",
-        "SWA3106 -AAL2663 ",
-        "JA680C  -KAL1532 ",
-        "ALK504  -AFL151  ",
-        "AAL48   -SKW5490 ",
-        "DAL1551 -ALK504  ",
-        "EDG43   -N405PM  ",
-        "HVN301  -JBU348  ",
-        "DAL1551 -UAL517  ",
-        "SKW5593 -HVN301  ",
-        "N9450E  -JBU348  ",
-        "RXA3257 -BXK     ",
-        "AAL48   -ELY004  ",
-        "ELY004  -ALK504  ",
-        "AAL325  -AAL135  ",
-        "DGQ     -BXK     ",
-        "N9450E  -UPS858  ",
-        "SWA3106 -N520CT  ",
-        "AZA63C  -KAC414  ",
-        "JA680C  -N721MM  ",
-        "N721MM  -KAL1532 ",
-        "ELY004  -AFL151  ",
-        "HVN301  -AAL325  ",
-        "SKW5593 -AAL325  ",
-        "N721MM  -AAY105  ",
-        "JBU206  -ASH6008 ",
-        "BER7213 -AZA63C  ",
-        "N520CT  -CPZ6062 ",
-        "ELY004  -UAL517  ",
-        "UPS858  -AAL135  ",
-        "AAL48   -UAL517  ",
-        "N9450E  -HVN301  ",
-        "N9450E  -AAL135  ",
-        "HVN301  -UPS858  ",
-        "NKS106  -EDG43   ",
-        "N9450E  -AAL325  "
+    "model_accuracy": 0.9545454545454546,
+    "metrics": {
+        "precision": 0.9230769230769231,
+        "recall": 0.9230769230769231,
+        "f1_score": 0.9230769230769231
+    },
+    "confusion_matrix": [
+        [
+            30,
+            1
+        ],
+        [
+            1,
+            12
+        ]
     ],
-    "separation_breach_count": {
+    "summary": {
         "total": 144,
-        "synthetic": 47,
-        "safe": 97
-    }
+        "conflicts": 44,
+        "safe": 100
+    },
+    "sample_risks": [
+        "BER7213 -AZA63C  ",
+        "BER7213 -KAC414  ",
+        "DAL1551 -AAL48   ",
+        "DAL1551 -ALK504  ",
+        "DAL1551 -SKW5490 ",
+        "DAL1551 -UAL517  ",
+        "SKW5593 -N9450E  ",
+        "SKW5593 -HVN301  ",
+        "SKW5593 -ASH6008 ",
+        "SKW5593 -AAL325  "
+    ]
 }
