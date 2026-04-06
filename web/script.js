@@ -1,26 +1,43 @@
 fetch("results.json")
-  .then(response => response.json())
+  .then(res => res.json())
   .then(data => {
-    console.log("DATA:", data);
 
-    const acc = document.getElementById("accuracy");
-    const total = document.getElementById("total");
-    const synthetic = document.getElementById("synthetic");
-    const safe = document.getElementById("safe");
-    const risks = document.getElementById("risks");
+    // Metrics
+    document.getElementById("accuracy").innerText = data.model_accuracy.toFixed(3);
+    document.getElementById("precision").innerText = data.metrics.precision.toFixed(3);
+    document.getElementById("recall").innerText = data.metrics.recall.toFixed(3);
+    document.getElementById("f1").innerText = data.metrics.f1_score.toFixed(3);
 
-    if (acc) acc.innerText = data.model_accuracy.toFixed(3);
+    // Confusion Matrix
+    const cm = data.confusion_matrix;
+    document.getElementById("cm00").innerText = cm[0][0];
+    document.getElementById("cm01").innerText = cm[0][1];
+    document.getElementById("cm10").innerText = cm[1][0];
+    document.getElementById("cm11").innerText = cm[1][1];
 
-    if (total) total.innerText = data.separation_breach_count.total;
-    if (synthetic) synthetic.innerText = data.separation_breach_count.synthetic;
-    if (safe) safe.innerText = data.separation_breach_count.safe;
+    // Summary
+    document.getElementById("total").innerText = data.summary.total;
+    document.getElementById("conflicts").innerText = data.summary.conflicts;
+    document.getElementById("safe").innerText = data.summary.safe;
 
-    if (risks) {
-      risks.innerText = data.detected_risks.length > 0
-        ? data.detected_risks.join(", ")
-        : "No risks detected";
+    // Risk pairs
+    const list = document.getElementById("risks");
+    data.sample_risks.forEach(pair => {
+      const li = document.createElement("li");
+      li.innerText = pair;
+      list.appendChild(li);
+    });
+
+    // Insight (dynamic)
+    let insight = "";
+
+    if (data.metrics.recall > 0.85) {
+      insight = "The model is highly effective at detecting potential near-miss events, minimizing safety risks.";
+    } else {
+      insight = "The model may miss some critical conflicts. Further tuning is recommended.";
     }
+
+    document.getElementById("insightText").innerText = insight;
+
   })
-  .catch(error => {
-    console.error("Error loading JSON:", error);
-  });
+  .catch(err => console.error(err));

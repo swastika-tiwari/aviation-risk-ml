@@ -1,26 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Aviation Near Miss Detection</title>
+  <title>Aviation Risk Dashboard</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>✈️ Aviation Near-Miss Detection</h1>
+<h1>✈️ Aviation Near-Miss Detection Dashboard</h1>
 
-<h2>Model Accuracy:</h2>
-<p id="accuracy">Loading...</p>
+<div class="card">
+  <h2>📊 Model Performance</h2>
+  <p>Accuracy: <span id="accuracy"></span></p>
+  <p>Precision: <span id="precision"></span></p>
+  <p>Recall: <span id="recall"></span></p>
+  <p>F1 Score: <span id="f1"></span></p>
+</div>
 
-<h2>Total Pair Evaluations:</h2>
-<p id="total">Loading...</p>
+<div class="card">
+  <h2>📉 Confusion Matrix</h2>
+  <table id="cm">
+    <tr>
+      <th></th><th>Predicted Safe</th><th>Predicted Risk</th>
+    </tr>
+    <tr>
+      <th>Actual Safe</th>
+      <td id="cm00"></td>
+      <td id="cm01"></td>
+    </tr>
+    <tr>
+      <th>Actual Risk</th>
+      <td id="cm10"></td>
+      <td id="cm11"></td>
+    </tr>
+  </table>
+</div>
 
-<h2>Synthetic Conflicts:</h2>
-<p id="synthetic">Loading...</p>
+<div class="card">
+  <h2>⚠️ Risk Summary</h2>
+  <p>Total Cases: <span id="total"></span></p>
+  <p>Conflicts Detected: <span id="conflicts"></span></p>
+  <p>Safe Cases: <span id="safe"></span></p>
+</div>
 
-<h2>Safe Cases:</h2>
-<p id="safe">Loading...</p>
+<div class="card">
+  <h2>🚨 Sample Risk Pairs</h2>
+  <ul id="risks"></ul>
+</div>
 
-<h2>Detected Risk Pairs:</h2>
-<p id="risks">Loading...</p>
+<div class="card insight">
+  <h2>🧠 Insight</h2>
+  <p id="insightText"></p>
+</div>
 
 <script src="script.js"></script>
 

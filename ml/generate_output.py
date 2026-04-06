@@ -6,7 +6,7 @@ import os
 from itertools import combinations
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # ==============================
 # CONFIG
@@ -79,7 +79,7 @@ def get_pairs(df):
 
 
 # ==============================
-# CPA CALCULATION (IMPROVED)
+# CPA CALCULATION
 # ==============================
 
 def compute_cpa(a1, a2):
@@ -113,7 +113,7 @@ def compute_cpa(a1, a2):
 
 
 # ==============================
-# SYNTHETIC DATA GENERATION
+# SYNTHETIC DATA
 # ==============================
 
 def generate_data(pairs):
@@ -121,16 +121,14 @@ def generate_data(pairs):
 
     for a1, a2 in pairs:
 
-        # original pair
         dist = haversine(a1['lat'], a1['lon'], a2['lat'], a2['lon'])
         alt_diff = abs(a1['geoaltitude'] - a2['geoaltitude'])
 
         label_real = 1 if (dist < HORIZONTAL_THRESHOLD_KM and alt_diff < VERTICAL_THRESHOLD_FT) else 0
         data.append((a1, a2, dist, alt_diff, label_real))
 
-        # synthetic (realistic)
+        # synthetic
         a2_syn = a2.copy()
-
         a2_syn['lat'] = a1['lat'] + np.random.uniform(-0.05, 0.05)
         a2_syn['lon'] = a1['lon'] + np.random.uniform(-0.05, 0.05)
         a2_syn['geoaltitude'] = a1['geoaltitude'] + np.random.uniform(-1500, 1500)
@@ -146,7 +144,7 @@ def generate_data(pairs):
 
 
 # ==============================
-# FEATURE ENGINEERING
+# FEATURES
 # ==============================
 
 def compute_features(data):
@@ -158,9 +156,7 @@ def compute_features(data):
         vel2 = a2.get('velocity', 0)
 
         closure_rate = abs(vel1 - vel2)
-
         cpa = compute_cpa(a1, a2)
-
         time_diff = abs(a1['time'] - a2['time'])
 
         X.append([dist, alt_diff, closure_rate, cpa, time_diff])
@@ -172,7 +168,7 @@ def compute_features(data):
 
 
 # ==============================
-# MODEL TRAINING
+# MODEL
 # ==============================
 
 def train_model(X, y):
@@ -192,11 +188,13 @@ def train_model(X, y):
     preds = model.predict(X_test)
 
     acc = accuracy_score(y_test, preds)
+    report = classification_report(y_test, preds, output_dict=True)
+    cm = confusion_matrix(y_test, preds)
 
     print("\n📊 Classification Report:\n")
     print(classification_report(y_test, preds))
 
-    return model, acc
+    return model, acc, report, cm
 
 
 # ==============================
@@ -218,15 +216,26 @@ def detect_risks(model, X, pair_names):
 # SAVE RESULTS
 # ==============================
 
-def save_results(acc, detected_pairs, y):
+def save_results(acc, detected_pairs, y, report, cm):
+
     results = {
         "model_accuracy": float(acc),
-        "detected_risks": list(set([f"{a}-{b}" for a, b in detected_pairs])),
-        "separation_breach_count": {
+
+        "metrics": {
+            "precision": float(report["1"]["precision"]),
+            "recall": float(report["1"]["recall"]),
+            "f1_score": float(report["1"]["f1-score"])
+        },
+
+        "confusion_matrix": cm.tolist(),
+
+        "summary": {
             "total": int(len(y)),
-            "synthetic": int(sum(y)),
+            "conflicts": int(sum(y)),
             "safe": int(len(y) - sum(y))
-        }
+        },
+
+        "sample_risks": [f"{a}-{b}" for a, b in detected_pairs[:10]]
     }
 
     print("Writing results to:", OUTPUT_PATH)
@@ -254,12 +263,13 @@ def main():
 
     X, y, pair_names = compute_features(data)
 
-    model, acc = train_model(X, y)
+    model, acc, report, cm = train_model(X, y)
+
     print(f"\n🎯 Model Accuracy: {acc:.4f}")
 
     detected = detect_risks(model, X, pair_names)
 
-    save_results(acc, detected, y)
+    save_results(acc, detected, y, report, cm)
 
     print("🎯 Done.")
 

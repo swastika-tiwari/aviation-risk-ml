@@ -220,14 +220,24 @@ def detect_risks(model, X, pair_names):
 
 def save_results(acc, detected_pairs, y):
     results = {
-        "model_accuracy": float(acc),
-        "detected_risks": list(set([f"{a}-{b}" for a, b in detected_pairs])),
-        "separation_breach_count": {
-            "total": int(len(y)),
-            "synthetic": int(sum(y)),
-            "safe": int(len(y) - sum(y))
-        }
-    }
+    "model_accuracy": float(acc),
+
+    "metrics": {
+        "precision": report["1"]["precision"],
+        "recall": report["1"]["recall"],
+        "f1_score": report["1"]["f1-score"]
+    },
+
+    "confusion_matrix": cm.tolist(),
+
+    "summary": {
+        "total": int(len(y)),
+        "conflicts": int(sum(y)),
+        "safe": int(len(y) - sum(y))
+    },
+
+    "sample_risks": detected_pairs[:10]
+}
 
     print("Writing results to:", OUTPUT_PATH)
 
