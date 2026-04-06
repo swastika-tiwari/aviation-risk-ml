@@ -1,110 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Aviation Risk Detection System</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Aviation Near-Miss Detection System</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <h1>Aviation Near-Miss Detection System</h1>
 
-<!-- ABOUT -->
-<div class="card">
-  <h2>About This System</h2>
-  <p>
-    This system analyzes aircraft trajectory data (ADS-B) to identify potential near-miss events.
-    A near-miss occurs when two aircraft come dangerously close in both horizontal and vertical space.
-  </p>
-</div>
+<section class="card">
+    <h2>Model Performance</h2>
+    <p><strong>Accuracy:</strong> <span id="accuracy"></span></p>
+    <p><strong>Precision:</strong> <span id="precision"></span></p>
+    <p><strong>Recall:</strong> <span id="recall"></span></p>
+    <p><strong>F1 Score:</strong> <span id="f1"></span></p>
 
-<!-- HOW IT WORKS -->
-<div class="card">
-  <h2>How It Works</h2>
-  <ol>
-    <li>Aircraft trajectory data is collected from ADS-B signals.</li>
-    <li>Aircraft pairs in the same time window are identified.</li>
-    <li>Distances, altitude differences, and motion patterns are computed.</li>
-    <li>A machine learning model predicts whether the interaction is risky.</li>
-  </ol>
-</div>
+    <p class="info">
+        These metrics evaluate how effectively the model identifies potential loss-of-separation events.
+        High recall ensures safety by minimizing missed conflicts.
+    </p>
+</section>
 
-<!-- WHAT IS NEAR MISS -->
-<div class="card">
-  <h2>What is a Near-Miss Event?</h2>
-  <p>
-    A near-miss (loss of separation) is defined as:
-  </p>
-  <ul>
-    <li>Horizontal distance less than 5 nautical miles (~9.26 km)</li>
-    <li>Vertical separation less than 1000 feet</li>
-  </ul>
-</div>
+<section class="card">
+    <h2>Confusion Matrix</h2>
 
-<!-- METRICS -->
-<div class="card">
-  <h2>Model Performance</h2>
-  <p>Accuracy: <span id="accuracy"></span></p>
-  <p>Precision: <span id="precision"></span></p>
-  <p>Recall: <span id="recall"></span></p>
-  <p>F1 Score: <span id="f1"></span></p>
+    <table>
+        <tr>
+            <th></th>
+            <th>Predicted Safe</th>
+            <th>Predicted Risk</th>
+        </tr>
+        <tr>
+            <td>Actual Safe</td>
+            <td id="tn"></td>
+            <td id="fp"></td>
+        </tr>
+        <tr>
+            <td>Actual Risk</td>
+            <td id="fn"></td>
+            <td id="tp"></td>
+        </tr>
+    </table>
 
-  <p class="desc">
-    Precision shows how accurate risk predictions are.
-    Recall shows how many real risks are detected (most critical for safety).
-  </p>
+    <p class="info">
+        The confusion matrix shows how many conflicts were correctly detected versus missed or falsely predicted.
+    </p>
+</section>
 
-  <canvas id="metricsChart"></canvas>
-</div>
+<section class="card">
+    <h2>Risk Distribution</h2>
+    <p>Critical: <span id="critical"></span></p>
+    <p>High: <span id="high"></span></p>
+    <p>Medium: <span id="medium"></span></p>
+    <p>Low: <span id="low"></span></p>
 
-<!-- CONFUSION MATRIX -->
-<div class="card">
-  <h2>Confusion Matrix</h2>
+    <p class="info">
+        This represents how aircraft interactions are distributed across different risk levels.
+    </p>
+</section>
 
-  <table>
-    <tr>
-      <th></th><th>Predicted Safe</th><th>Predicted Risk</th>
-    </tr>
-    <tr>
-      <th>Actual Safe</th>
-      <td id="cm00"></td>
-      <td id="cm01"></td>
-    </tr>
-    <tr>
-      <th>Actual Risk</th>
-      <td id="cm10"></td>
-      <td id="cm11"></td>
-    </tr>
-  </table>
+<section class="card">
+    <h2>Top Risk Cases</h2>
+    <ul id="topRisks"></ul>
 
-  <p class="desc">
-    This matrix compares predictions with actual outcomes.
-    The goal is to minimize missed risks while avoiding false alarms.
-  </p>
-</div>
+    <p class="info">
+        These are the most critical aircraft interactions ranked by predicted risk score.
+    </p>
+</section>
 
-<!-- SUMMARY -->
-<div class="card">
-  <h2>Risk Summary</h2>
-  <p>Total Cases: <span id="total"></span></p>
-  <p>Conflicts Detected: <span id="conflicts"></span></p>
-  <p>Safe Cases: <span id="safe"></span></p>
+<section class="card">
+    <h2>System Insight</h2>
+    <p id="insight"></p>
 
-  <canvas id="summaryChart"></canvas>
-</div>
+    <p class="info">
+        This summarizes the overall airspace safety condition based on model predictions.
+    </p>
+</section>
 
-<!-- SAMPLE RISKS -->
-<div class="card">
-  <h2>Detected Risk Cases</h2>
-  <ul id="risks"></ul>
-</div>
+<section class="card">
+    <h2>About the System</h2>
+    <p>
+        This system analyzes ADS-B flight trajectory data to detect potential near-miss events.
+        It uses machine learning combined with trajectory-based features such as distance,
+        altitude separation, and Closest Point of Approach (CPA) to predict risk.
+    </p>
 
-<!-- INTERPRETATION -->
-<div class="card">
-  <h2>System Interpretation</h2>
-  <p id="insightText"></p>
-</div>
+    <p>
+        Unlike traditional monitoring systems, this approach enables predictive safety analysis
+        by identifying conflicts before they occur.
+    </p>
+</section>
 
 <script src="script.js"></script>
 
