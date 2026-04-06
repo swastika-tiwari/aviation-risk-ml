@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import json
 import pickle
+import numpy as np
 
 from features import compute_features
 
@@ -13,9 +14,20 @@ METRICS_PATH = os.path.join(BASE_DIR, "ml", "metrics.json")
 OUTPUT_PATH = os.path.join(BASE_DIR, "web", "results.json")
 
 
+def classify_risk(score):
+    if score > 0.8:
+        return "Critical"
+    elif score > 0.5:
+        return "High"
+    elif score > 0.2:
+        return "Medium"
+    else:
+        return "Low"
+
+
 def generate_output():
 
-    print("🚀 Generating output for frontend...")
+    print("🚀 Generating intelligent output...")
 
     # -----------------------------
     # LOAD DATA
@@ -47,21 +59,52 @@ def generate_output():
         }
 
     # -----------------------------
-    # SAMPLE RISK OUTPUT
+    # RISK DISTRIBUTION
     # -----------------------------
-    sample_results = []
+    distribution = {
+        "Critical": 0,
+        "High": 0,
+        "Medium": 0,
+        "Low": 0
+    }
 
-    for i in range(min(10, len(df))):
-        risk_score = float(probs[i])
-
-        status = "Critical" if risk_score > 0.8 else "Safe"
-
-        sample_results.append(
-            f"Pair {i+1} → Risk: {round(risk_score, 3)} ({status})"
-        )
+    for score in probs:
+        label = classify_risk(score)
+        distribution[label] += 1
 
     # -----------------------------
-    # FINAL JSON STRUCTURE
+    # TOP RISKY CASES
+    # -----------------------------
+    top_indices = np.argsort(probs)[-10:][::-1]
+
+    top_cases = []
+
+    for i in top_indices:
+        score = float(probs[i])
+        label = classify_risk(score)
+
+        top_cases.append({
+            "pair_id": int(i),
+            "risk_score": round(score, 3),
+            "risk_level": label
+        })
+
+    # -----------------------------
+    # INSIGHT GENERATION
+    # -----------------------------
+    insight = ""
+
+    if distribution["Critical"] > 0:
+        insight = "Critical near-miss risks detected. Immediate attention required."
+    elif distribution["High"] > 5:
+        insight = "Multiple high-risk aircraft interactions observed."
+    elif distribution["Medium"] > distribution["Low"]:
+        insight = "Moderate convergence trends detected in air traffic."
+    else:
+        insight = "Airspace appears largely safe with low-risk interactions."
+
+    # -----------------------------
+    # FINAL OUTPUT
     # -----------------------------
     output = {
         "model_accuracy": float(metrics["accuracy"]),
@@ -80,16 +123,20 @@ def generate_output():
             "safe": int(len(df) - df["is_conflict"].sum())
         },
 
-        "sample_risks": sample_results
+        "risk_distribution": distribution,
+
+        "top_risks": top_cases,
+
+        "insight": insight
     }
 
     # -----------------------------
-    # SAVE JSON
+    # SAVE
     # -----------------------------
     with open(OUTPUT_PATH, "w") as f:
         json.dump(output, f, indent=4)
 
-    print("✅ results.json updated successfully")
+    print("✅ Intelligent results.json generated")
 
 
 if __name__ == "__main__":

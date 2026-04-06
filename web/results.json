@@ -20,16 +20,63 @@
         "conflicts": 365,
         "safe": 2085
     },
-    "sample_risks": [
-        "Pair 1 \u2192 Risk: 0.0 (Safe)",
-        "Pair 2 \u2192 Risk: 0.114 (Safe)",
-        "Pair 3 \u2192 Risk: 0.0 (Safe)",
-        "Pair 4 \u2192 Risk: 0.163 (Safe)",
-        "Pair 5 \u2192 Risk: 0.001 (Safe)",
-        "Pair 6 \u2192 Risk: 0.116 (Safe)",
-        "Pair 7 \u2192 Risk: 0.0 (Safe)",
-        "Pair 8 \u2192 Risk: 0.267 (Safe)",
-        "Pair 9 \u2192 Risk: 0.0 (Safe)",
-        "Pair 10 \u2192 Risk: 0.135 (Safe)"
-    ]
+    "risk_distribution": {
+        "Critical": 0,
+        "High": 215,
+        "Medium": 587,
+        "Low": 1648
+    },
+    "top_risks": [
+        {
+            "pair_id": 1703,
+            "risk_score": 0.781,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 723,
+            "risk_score": 0.756,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 2105,
+            "risk_score": 0.745,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 47,
+            "risk_score": 0.742,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 531,
+            "risk_score": 0.74,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 1743,
+            "risk_score": 0.74,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 2313,
+            "risk_score": 0.737,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 2081,
+            "risk_score": 0.73,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 117,
+            "risk_score": 0.723,
+            "risk_level": "High"
+        },
+        {
+            "pair_id": 451,
+            "risk_score": 0.717,
+            "risk_level": "High"
+        }
+    ],
+    "insight": "Multiple high-risk aircraft interactions observed."
 }
