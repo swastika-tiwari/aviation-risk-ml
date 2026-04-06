@@ -1,23 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Aviation Risk Dashboard</title>
+  <title>Aviation Risk Analytics Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<h1>✈️ Aviation Near-Miss Detection Dashboard</h1>
+<h1>Aviation Near-Miss Detection System</h1>
 
 <div class="card">
-  <h2>📊 Model Performance</h2>
+  <h2>Model Performance</h2>
   <p>Accuracy: <span id="accuracy"></span></p>
   <p>Precision: <span id="precision"></span></p>
   <p>Recall: <span id="recall"></span></p>
   <p>F1 Score: <span id="f1"></span></p>
+
+  <p class="desc">
+    These metrics evaluate how effectively the model identifies potential near-miss events.
+    Recall is especially critical as it reflects how many real conflicts are successfully detected.
+  </p>
+
+  <canvas id="metricsChart"></canvas>
 </div>
 
 <div class="card">
-  <h2>📉 Confusion Matrix</h2>
+  <h2>Confusion Matrix</h2>
   <table id="cm">
     <tr>
       <th></th><th>Predicted Safe</th><th>Predicted Risk</th>
@@ -33,22 +41,29 @@
       <td id="cm11"></td>
     </tr>
   </table>
+
+  <p class="desc">
+    This matrix shows how predictions compare with actual outcomes.
+    Minimizing missed risks (bottom-left cell) is critical for aviation safety.
+  </p>
 </div>
 
 <div class="card">
-  <h2>⚠️ Risk Summary</h2>
+  <h2>Risk Summary</h2>
   <p>Total Cases: <span id="total"></span></p>
   <p>Conflicts Detected: <span id="conflicts"></span></p>
   <p>Safe Cases: <span id="safe"></span></p>
+
+  <canvas id="summaryChart"></canvas>
 </div>
 
 <div class="card">
-  <h2>🚨 Sample Risk Pairs</h2>
+  <h2>Detected Risk Pairs</h2>
   <ul id="risks"></ul>
 </div>
 
-<div class="card insight">
-  <h2>🧠 Insight</h2>
+<div class="card">
+  <h2>System Interpretation</h2>
   <p id="insightText"></p>
 </div>
 

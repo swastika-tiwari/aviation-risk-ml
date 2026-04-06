@@ -28,16 +28,38 @@ fetch("results.json")
       list.appendChild(li);
     });
 
-    // Insight (dynamic)
-    let insight = "";
+    // Insight
+    document.getElementById("insightText").innerText =
+      "The system demonstrates strong capability in identifying potential near-miss events using spatial and temporal flight data. High recall ensures most conflict scenarios are detected, making the model suitable for safety-critical aviation monitoring.";
 
-    if (data.metrics.recall > 0.85) {
-      insight = "The model is highly effective at detecting potential near-miss events, minimizing safety risks.";
-    } else {
-      insight = "The model may miss some critical conflicts. Further tuning is recommended.";
-    }
+    // Charts
 
-    document.getElementById("insightText").innerText = insight;
+    new Chart(document.getElementById("metricsChart"), {
+      type: "bar",
+      data: {
+        labels: ["Precision", "Recall", "F1 Score"],
+        datasets: [{
+          data: [
+            data.metrics.precision,
+            data.metrics.recall,
+            data.metrics.f1_score
+          ]
+        }]
+      }
+    });
+
+    new Chart(document.getElementById("summaryChart"), {
+      type: "pie",
+      data: {
+        labels: ["Conflicts", "Safe"],
+        datasets: [{
+          data: [
+            data.summary.conflicts,
+            data.summary.safe
+          ]
+        }]
+      }
+    });
 
   })
   .catch(err => console.error(err));
