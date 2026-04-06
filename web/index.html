@@ -1,14 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Aviation Risk Analytics Dashboard</title>
+  <title>Aviation Risk Detection System</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
 <h1>Aviation Near-Miss Detection System</h1>
 
+<!-- ABOUT -->
+<div class="card">
+  <h2>About This System</h2>
+  <p>
+    This system analyzes aircraft trajectory data (ADS-B) to identify potential near-miss events.
+    A near-miss occurs when two aircraft come dangerously close in both horizontal and vertical space.
+  </p>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="card">
+  <h2>How It Works</h2>
+  <ol>
+    <li>Aircraft trajectory data is collected from ADS-B signals.</li>
+    <li>Aircraft pairs in the same time window are identified.</li>
+    <li>Distances, altitude differences, and motion patterns are computed.</li>
+    <li>A machine learning model predicts whether the interaction is risky.</li>
+  </ol>
+</div>
+
+<!-- WHAT IS NEAR MISS -->
+<div class="card">
+  <h2>What is a Near-Miss Event?</h2>
+  <p>
+    A near-miss (loss of separation) is defined as:
+  </p>
+  <ul>
+    <li>Horizontal distance less than 5 nautical miles (~9.26 km)</li>
+    <li>Vertical separation less than 1000 feet</li>
+  </ul>
+</div>
+
+<!-- METRICS -->
 <div class="card">
   <h2>Model Performance</h2>
   <p>Accuracy: <span id="accuracy"></span></p>
@@ -17,16 +51,18 @@
   <p>F1 Score: <span id="f1"></span></p>
 
   <p class="desc">
-    These metrics evaluate how effectively the model identifies potential near-miss events.
-    Recall is especially critical as it reflects how many real conflicts are successfully detected.
+    Precision shows how accurate risk predictions are.
+    Recall shows how many real risks are detected (most critical for safety).
   </p>
 
   <canvas id="metricsChart"></canvas>
 </div>
 
+<!-- CONFUSION MATRIX -->
 <div class="card">
   <h2>Confusion Matrix</h2>
-  <table id="cm">
+
+  <table>
     <tr>
       <th></th><th>Predicted Safe</th><th>Predicted Risk</th>
     </tr>
@@ -43,11 +79,12 @@
   </table>
 
   <p class="desc">
-    This matrix shows how predictions compare with actual outcomes.
-    Minimizing missed risks (bottom-left cell) is critical for aviation safety.
+    This matrix compares predictions with actual outcomes.
+    The goal is to minimize missed risks while avoiding false alarms.
   </p>
 </div>
 
+<!-- SUMMARY -->
 <div class="card">
   <h2>Risk Summary</h2>
   <p>Total Cases: <span id="total"></span></p>
@@ -57,11 +94,13 @@
   <canvas id="summaryChart"></canvas>
 </div>
 
+<!-- SAMPLE RISKS -->
 <div class="card">
-  <h2>Detected Risk Pairs</h2>
+  <h2>Detected Risk Cases</h2>
   <ul id="risks"></ul>
 </div>
 
+<!-- INTERPRETATION -->
 <div class="card">
   <h2>System Interpretation</h2>
   <p id="insightText"></p>
