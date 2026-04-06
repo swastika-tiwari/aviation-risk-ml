@@ -6,7 +6,7 @@ import os
 from itertools import combinations
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+
 
 # ==============================
 # CONFIG
@@ -99,18 +99,23 @@ def generate_synthetic_pairs(pairs):
         # label safe
         data.append((a1, a2, dist, alt_diff, 0))
 
-        # create synthetic conflict (nudge)
-        a2_syn = a2.copy()
+        # create synthetic conflict (more realistic)
+a2_syn = a2.copy()
 
-        # force closer position
-        a2_syn['lat'] = a1['lat'] + np.random.uniform(-0.01, 0.01)
-        a2_syn['lon'] = a1['lon'] + np.random.uniform(-0.01, 0.01)
-        a2_syn['geoaltitude'] = a1['geoaltitude'] + np.random.uniform(-500, 500)
+# move aircraft closer but NOT always extreme
+a2_syn['lat'] = a1['lat'] + np.random.uniform(-0.05, 0.05)
+a2_syn['lon'] = a1['lon'] + np.random.uniform(-0.05, 0.05)
 
-        dist_syn = haversine(a1['lat'], a1['lon'], a2_syn['lat'], a2_syn['lon'])
-        alt_syn = abs(a1['geoaltitude'] - a2_syn['geoaltitude'])
+# altitude closer but not identical
+a2_syn['geoaltitude'] = a1['geoaltitude'] + np.random.uniform(-1500, 1500)
 
-        data.append((a1, a2_syn, dist_syn, alt_syn, 1))
+dist_syn = haversine(a1['lat'], a1['lon'], a2_syn['lat'], a2_syn['lon'])
+alt_syn = abs(a1['geoaltitude'] - a2_syn['geoaltitude'])
+
+# label based on REAL threshold (not forced)
+label_syn = 1 if (dist_syn < HORIZONTAL_THRESHOLD_KM and alt_syn < VERTICAL_THRESHOLD_FT) else 0
+
+data.append((a1, a2_syn, dist_syn, alt_syn, label_syn))
 
     return data
 
@@ -118,6 +123,40 @@ def generate_synthetic_pairs(pairs):
 # ==============================
 # FEATURE ENGINEERING
 # ==============================
+
+def compute_cpa(a1, a2):
+    # positions
+    x1, y1 = a1['lat'], a1['lon']
+    x2, y2 = a2['lat'], a2['lon']
+
+    # approximate velocity vectors (random direction if heading missing)
+    v1 = a1.get('velocity', 0)
+    v2 = a2.get('velocity', 0)
+
+    theta1 = np.random.uniform(0, 2*np.pi)
+    theta2 = np.random.uniform(0, 2*np.pi)
+
+    vx1, vy1 = v1 * np.cos(theta1), v1 * np.sin(theta1)
+    vx2, vy2 = v2 * np.cos(theta2), v2 * np.sin(theta2)
+
+    # relative motion
+    dx, dy = x2 - x1, y2 - y1
+    dvx, dvy = vx2 - vx1, vy2 - vy1
+
+    # time to closest approach
+    denom = dvx**2 + dvy**2
+    if denom == 0:
+        return haversine(x1, y1, x2, y2)
+
+    t = -(dx*dvx + dy*dvy) / denom
+
+    # closest point
+    cx1 = x1 + vx1 * t
+    cy1 = y1 + vy1 * t
+    cx2 = x2 + vx2 * t
+    cy2 = y2 + vy2 * t
+
+    return haversine(cx1, cy1, cx2, cy2)
 
 def compute_features(data):
     X = []
@@ -132,14 +171,17 @@ def compute_features(data):
         closure_rate = abs(vel1 - vel2)
 
         # CPA (simplified proxy)
-        cpa = dist - closure_rate * 0.01
+        cpa = compute_cpa(a1, a2)
+        time_diff = abs(a1['time'] - a2['time'])
 
         X.append([
             dist,
             alt_diff,
             closure_rate,
-            cpa
+            cpa,
+            time_diff
         ])
+        
 
         y.append(label)
 
@@ -157,7 +199,12 @@ def train_model(X, y):
         X, y, test_size=0.3, random_state=42, stratify=y
     )
 
-    model = RandomForestClassifier(n_estimators=100)
+    RandomForestClassifier(
+        n_estimators=200,
+        max_depth=10,
+        min_samples_split=5,
+        random_state=42
+    )
     model.fit(X_train, y_train)
 
     preds = model.predict(X_test)
@@ -226,6 +273,9 @@ def main():
     detected, preds = detect_risks(model, X, pair_names)
 
     save_results(acc, detected, y)
+    from sklearn.metrics import classification_report
+
+    print(classification_report(y_test, preds)) 
 
     print("🎯 Done.")
 
