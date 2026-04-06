@@ -2,57 +2,62 @@ fetch("results.json")
   .then(res => res.json())
   .then(data => {
 
-    document.getElementById("accuracy").innerText = data.model_accuracy.toFixed(3);
-    document.getElementById("precision").innerText = data.metrics.precision.toFixed(3);
-    document.getElementById("recall").innerText = data.metrics.recall.toFixed(3);
-    document.getElementById("f1").innerText = data.metrics.f1_score.toFixed(3);
+    console.log("DATA:", data);
 
-    const cm = data.confusion_matrix;
-    document.getElementById("cm00").innerText = cm[0][0];
-    document.getElementById("cm01").innerText = cm[0][1];
-    document.getElementById("cm10").innerText = cm[1][0];
-    document.getElementById("cm11").innerText = cm[1][1];
+    // ---------------------------
+    // SAFE ACCESS FUNCTION
+    // ---------------------------
+    const safe = (val) => (val !== undefined && val !== null) ? val : 0;
 
-    document.getElementById("total").innerText = data.summary.total;
-    document.getElementById("conflicts").innerText = data.summary.conflicts;
-    document.getElementById("safe").innerText = data.summary.safe;
+    // ---------------------------
+    // METRICS
+    // ---------------------------
+    document.getElementById("accuracy").innerText =
+      safe(data.model_accuracy).toFixed(3);
 
+    document.getElementById("precision").innerText =
+      safe(data.metrics?.precision).toFixed(3);
+
+    document.getElementById("recall").innerText =
+      safe(data.metrics?.recall).toFixed(3);
+
+    document.getElementById("f1").innerText =
+      safe(data.metrics?.f1_score).toFixed(3);
+
+    // ---------------------------
+    // SUMMARY
+    // ---------------------------
+    document.getElementById("total").innerText =
+      safe(data.summary?.total);
+
+    document.getElementById("conflicts").innerText =
+      safe(data.summary?.conflicts);
+
+    document.getElementById("safe").innerText =
+      safe(data.summary?.safe);
+
+    // ---------------------------
+    // CONFUSION MATRIX
+    // ---------------------------
+    if (data.confusion_matrix) {
+      const cm = data.confusion_matrix;
+
+      document.getElementById("cm00").innerText = cm[0][0];
+      document.getElementById("cm01").innerText = cm[0][1];
+      document.getElementById("cm10").innerText = cm[1][0];
+      document.getElementById("cm11").innerText = cm[1][1];
+    }
+
+    // ---------------------------
+    // SAMPLE RISKS
+    // ---------------------------
     const list = document.getElementById("risks");
-    data.sample_risks.forEach(pair => {
+    list.innerHTML = "";
+
+    (data.sample_risks || []).forEach(r => {
       const li = document.createElement("li");
-      li.innerText = pair;
+      li.innerText = r;
       list.appendChild(li);
-    });
-
-    document.getElementById("insightText").innerText =
-      "The system demonstrates strong performance in identifying potential near-miss events using aircraft trajectory data. High recall indicates that most critical conflicts are successfully detected, making the model suitable for safety-focused monitoring applications.";
-
-    // Graphs
-    new Chart(document.getElementById("metricsChart"), {
-      type: "bar",
-      data: {
-        labels: ["Precision", "Recall", "F1 Score"],
-        datasets: [{
-          data: [
-            data.metrics.precision,
-            data.metrics.recall,
-            data.metrics.f1_score
-          ]
-        }]
-      }
-    });
-
-    new Chart(document.getElementById("summaryChart"), {
-      type: "pie",
-      data: {
-        labels: ["Conflicts", "Safe"],
-        datasets: [{
-          data: [
-            data.summary.conflicts,
-            data.summary.safe
-          ]
-        }]
-      }
     });
 
   })
