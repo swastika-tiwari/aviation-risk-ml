@@ -13,7 +13,7 @@ from sklearn.metrics import accuracy_score, classification_report
 # ==============================
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(BASE_DIR, "data", "flights.csv")
+DATA_PATH = os.path.join(BASE_DIR, "data", "flight.csv")
 OUTPUT_PATH = os.path.join(BASE_DIR, "web", "results.json")
 
 HORIZONTAL_THRESHOLD_KM = 9.26
