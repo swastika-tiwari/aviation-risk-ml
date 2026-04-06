@@ -1,6 +1,6 @@
 {
     "total_samples": 2450,
-    "high_risk_cases": 25,
+    "high_risk_cases": 0,
     "sample_results": [
         {
             "aircraft_1": "A1",
@@ -11,8 +11,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.11033154941769775,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -23,8 +23,20 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.16447213884891576,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.0012944869465051439,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.11725610781371475,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -35,8 +47,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.6266274329122186,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -47,8 +59,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.16286316290915243,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -59,8 +71,20 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.5299468929008994,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.0012944869465051439,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.29686945689896344,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -71,8 +95,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.11547617011432516,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -83,8 +107,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.10860651538991078,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -95,8 +119,32 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.584552555172655,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.0023076923076923075,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.5159568184437195,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.0012944869465051439,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.2250126288503771,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -107,8 +155,32 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.3246176877317625,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.0012944869465051439,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.5866089463798,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 9.626955475330927e-05,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.6071324365205398,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -119,8 +191,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.4636778006666622,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -131,8 +203,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.09548209754737458,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -143,8 +215,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.12987191558351338,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -155,8 +227,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.24287612088169627,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -167,8 +239,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.2100176615918173,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -179,8 +251,20 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.5216642016292581,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.0011514254300530695,
+            "status": "Safe"
+        },
+        {
+            "aircraft_1": "A1",
+            "aircraft_2": "A2",
+            "risk_score": 0.334905838731024,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -191,8 +275,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.30334019811050905,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -203,8 +287,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
+            "risk_score": 0.7335847607545525,
+            "status": "Safe"
         },
         {
             "aircraft_1": "A1",
@@ -215,92 +299,8 @@
         {
             "aircraft_1": "A1",
             "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 0.0,
+            "risk_score": 0.0581378935837832,
             "status": "Safe"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 0.0,
-            "status": "Safe"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 0.0,
-            "status": "Safe"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 0.005,
-            "status": "Safe"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 0.0,
-            "status": "Safe"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 0.0,
-            "status": "Safe"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 0.995,
-            "status": "Critical"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 0.0,
-            "status": "Safe"
-        },
-        {
-            "aircraft_1": "A1",
-            "aircraft_2": "A2",
-            "risk_score": 1.0,
-            "status": "Critical"
         }
     ]
 }
