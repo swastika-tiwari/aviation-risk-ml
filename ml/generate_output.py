@@ -4,6 +4,11 @@ import json
 import pickle
 import numpy as np
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.metrics import classification_report, roc_curve, auc
+
 from features import compute_features
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,6 +49,12 @@ def generate_output():
     probs = model.predict_proba(X)[:, 1]
 
     # -----------------------------
+    # PREDICTIONS FOR REPORT
+    # -----------------------------
+    y_true = df["is_conflict"]
+    y_pred = (probs > 0.5).astype(int)
+
+    # -----------------------------
     # LOAD METRICS
     # -----------------------------
     if os.path.exists(METRICS_PATH):
@@ -57,6 +68,18 @@ def generate_output():
             "f1_score": 0,
             "confusion_matrix": [[0, 0], [0, 0]]
         }
+
+    # -----------------------------
+    # CLASSIFICATION REPORT
+    # -----------------------------
+    report_dict = classification_report(y_true, y_pred, output_dict=True)
+
+    report_path = os.path.join(BASE_DIR, "web", "classification_report.json")
+    with open(report_path, "w") as f:
+        json.dump(report_dict, f, indent=4)
+
+    print("\n📊 Classification Report:\n")
+    print(classification_report(y_true, y_pred))
 
     # -----------------------------
     # RISK DISTRIBUTION
@@ -104,10 +127,72 @@ def generate_output():
         insight = "Airspace appears largely safe with low-risk interactions."
 
     # -----------------------------
+    # VISUALIZATIONS
+    # -----------------------------
+    print("📊 Generating visualizations...")
+
+    # 1. Confusion Matrix
+    cm = np.array(metrics["confusion_matrix"])
+
+    plt.figure()
+    sns.heatmap(cm, annot=True, fmt="d")
+    plt.title("Confusion Matrix")
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
+    plt.savefig(os.path.join(BASE_DIR, "web", "confusion_matrix.png"))
+    plt.close()
+
+    # 2. Risk Distribution
+    plt.figure()
+    plt.bar(distribution.keys(), distribution.values())
+    plt.title("Risk Distribution")
+    plt.xlabel("Risk Level")
+    plt.ylabel("Count")
+    plt.savefig(os.path.join(BASE_DIR, "web", "risk_distribution.png"))
+    plt.close()
+
+    # 3. Top Risk Scores
+    top_scores = [case["risk_score"] for case in top_cases]
+
+    plt.figure()
+    plt.plot(range(len(top_scores)), top_scores, marker='o')
+    plt.title("Top 10 Risk Scores")
+    plt.xlabel("Case Rank")
+    plt.ylabel("Risk Score")
+    plt.savefig(os.path.join(BASE_DIR, "web", "top_risks.png"))
+    plt.close()
+
+    # 4. Classification Report Heatmap
+    report_df = pd.DataFrame(report_dict).transpose().iloc[:-1, :-1]
+
+    plt.figure()
+    sns.heatmap(report_df, annot=True)
+    plt.title("Classification Report Heatmap")
+    plt.savefig(os.path.join(BASE_DIR, "web", "classification_report.png"))
+    plt.close()
+
+    # 5. ROC Curve + AUC
+    fpr, tpr, _ = roc_curve(y_true, probs)
+    roc_auc = auc(fpr, tpr)
+
+    plt.figure()
+    plt.plot(fpr, tpr, label=f"AUC = {roc_auc:.3f}")
+    plt.plot([0, 1], [0, 1], linestyle='--')
+    plt.title("ROC Curve")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.legend()
+    plt.savefig(os.path.join(BASE_DIR, "web", "roc_curve.png"))
+    plt.close()
+
+    print("📈 All visualizations saved in /web folder")
+
+    # -----------------------------
     # FINAL OUTPUT
     # -----------------------------
     output = {
         "model_accuracy": float(metrics["accuracy"]),
+        "auc_score": float(roc_auc),
 
         "metrics": {
             "precision": float(metrics["precision"]),
@@ -124,9 +209,7 @@ def generate_output():
         },
 
         "risk_distribution": distribution,
-
         "top_risks": top_cases,
-
         "insight": insight
     }
 
