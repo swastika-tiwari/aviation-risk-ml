@@ -14,11 +14,14 @@ from features import compute_features
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DATA_PATH = os.path.join(BASE_DIR, "data", "training_set.csv")
-MODEL_PATH = os.path.join(BASE_DIR, "data", "conflict_model.pkl")
+MODEL_PATH = os.path.join(BASE_DIR, "ml", "conflict_model.pkl")
 METRICS_PATH = os.path.join(BASE_DIR, "ml", "metrics.json")
 OUTPUT_PATH = os.path.join(BASE_DIR, "web", "results.json")
 
 
+# ==============================
+# RISK CLASSIFICATION
+# ==============================
 def classify_risk(score):
     if score > 0.8:
         return "Critical"
@@ -30,6 +33,9 @@ def classify_risk(score):
         return "Low"
 
 
+# ==============================
+# MAIN FUNCTION
+# ==============================
 def generate_output():
 
     print("🚀 Generating intelligent output...")
@@ -41,21 +47,24 @@ def generate_output():
     X = compute_features(df)
 
     # -----------------------------
-    # LOAD MODEL
+    # LOAD MODEL + SCALER
     # -----------------------------
     with open(MODEL_PATH, "rb") as f:
-        model = pickle.load(f)
+        model, scaler = pickle.load(f)
 
+    X = scaler.transform(X)
+
+    # -----------------------------
+    # PREDICTIONS
+    # -----------------------------
     probs = model.predict_proba(X)[:, 1]
 
-    # -----------------------------
-    # PREDICTIONS FOR REPORT
-    # -----------------------------
+    # 🔥 LOWER THRESHOLD FOR SAFETY
     y_true = df["is_conflict"]
-    y_pred = (probs > 0.5).astype(int)
+    y_pred = (probs > 0.3).astype(int)
 
     # -----------------------------
-    # LOAD METRICS
+    # LOAD METRICS (fallback safe)
     # -----------------------------
     if os.path.exists(METRICS_PATH):
         with open(METRICS_PATH, "r") as f:
@@ -84,12 +93,7 @@ def generate_output():
     # -----------------------------
     # RISK DISTRIBUTION
     # -----------------------------
-    distribution = {
-        "Critical": 0,
-        "High": 0,
-        "Medium": 0,
-        "Low": 0
-    }
+    distribution = {"Critical": 0, "High": 0, "Medium": 0, "Low": 0}
 
     for score in probs:
         label = classify_risk(score)
@@ -101,7 +105,6 @@ def generate_output():
     top_indices = np.argsort(probs)[-10:][::-1]
 
     top_cases = []
-
     for i in top_indices:
         score = float(probs[i])
         label = classify_risk(score)
@@ -115,8 +118,6 @@ def generate_output():
     # -----------------------------
     # INSIGHT GENERATION
     # -----------------------------
-    insight = ""
-
     if distribution["Critical"] > 0:
         insight = "Critical near-miss risks detected. Immediate attention required."
     elif distribution["High"] > 5:
@@ -188,7 +189,7 @@ def generate_output():
     print("📈 All visualizations saved in /web folder")
 
     # -----------------------------
-    # FINAL OUTPUT
+    # FINAL OUTPUT JSON
     # -----------------------------
     output = {
         "model_accuracy": float(metrics["accuracy"]),
@@ -213,9 +214,6 @@ def generate_output():
         "insight": insight
     }
 
-    # -----------------------------
-    # SAVE
-    # -----------------------------
     with open(OUTPUT_PATH, "w") as f:
         json.dump(output, f, indent=4)
 
