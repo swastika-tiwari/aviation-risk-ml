@@ -1,83 +1,83 @@
 {
-    "model_accuracy": 0.8530612244897959,
-    "auc_score": 0.9076350974015308,
+    "model_accuracy": 0.8698039215686274,
+    "auc_score": 0.9095972987649186,
     "metrics": {
-        "precision": 0.5084745762711864,
-        "recall": 0.27522935779816515,
-        "f1_score": 0.35714285714285715
+        "precision": 0.8221614227086184,
+        "recall": 0.9434850863422292,
+        "f1_score": 0.8786549707602339
     },
     "confusion_matrix": [
         [
-            597,
-            29
+            508,
+            130
         ],
         [
-            79,
-            30
+            36,
+            601
         ]
     ],
     "summary": {
         "total": 2450,
-        "conflicts": 365,
-        "safe": 2085
+        "conflicts": 326,
+        "safe": 2124
     },
     "risk_distribution": {
-        "Critical": 0,
-        "High": 215,
-        "Medium": 589,
-        "Low": 1646
+        "Critical": 71,
+        "High": 595,
+        "Medium": 436,
+        "Low": 1348
     },
     "top_risks": [
         {
-            "pair_id": 1703,
-            "risk_score": 0.777,
-            "risk_level": "High"
+            "pair_id": 2307,
+            "risk_score": 0.895,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 2081,
-            "risk_score": 0.745,
-            "risk_level": "High"
+            "pair_id": 1919,
+            "risk_score": 0.883,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 2313,
-            "risk_score": 0.743,
-            "risk_level": "High"
+            "pair_id": 465,
+            "risk_score": 0.881,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 531,
-            "risk_score": 0.743,
-            "risk_level": "High"
+            "pair_id": 1417,
+            "risk_score": 0.877,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 723,
-            "risk_score": 0.742,
-            "risk_level": "High"
+            "pair_id": 1937,
+            "risk_score": 0.876,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 47,
-            "risk_score": 0.737,
-            "risk_level": "High"
+            "pair_id": 1619,
+            "risk_score": 0.873,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 1743,
-            "risk_score": 0.735,
-            "risk_level": "High"
+            "pair_id": 1951,
+            "risk_score": 0.873,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 151,
-            "risk_score": 0.733,
-            "risk_level": "High"
+            "pair_id": 1201,
+            "risk_score": 0.87,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 2105,
-            "risk_score": 0.729,
-            "risk_level": "High"
+            "pair_id": 1615,
+            "risk_score": 0.867,
+            "risk_level": "Critical"
         },
         {
-            "pair_id": 117,
-            "risk_score": 0.726,
-            "risk_level": "High"
+            "pair_id": 2439,
+            "risk_score": 0.857,
+            "risk_level": "Critical"
         }
     ],
-    "insight": "Multiple high-risk aircraft interactions observed."
+    "insight": "Critical near-miss risks detected. Immediate attention required."
 }
